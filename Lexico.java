@@ -1,84 +1,50 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Lexico {
-    String caracter, buffer, aux = "";
-    int posicion=0;
+class Lexico {
+    String caracter, buffer, temporal;
+    int posicion;
 
     String[] reservadas = {"class","integer","real","publico","privado", "var"};
     String[] operador_1 = {"{","}","(",")",":",";",","};
 
-    public static void main(String[] args) {
-        Lexico iniciar = new Lexico();
-        iniciar.Escaner();
+    public Lexico() {
+        posicion = 0;
     }
-    
-    public void Escaner(){
+
+    public void lectura() {
         Scanner entrada = new Scanner(System.in);
-
-        ArrayList<String> tabla1 = new ArrayList<>();
-        ArrayList<String> tabla2 = new ArrayList<>();
-        
-        int t;
-        boolean salir = true;
-        String aniadir;
-        
-        System.out.print("Ingrese la cadena: ");
+        System.out.print("Leer cadena: ");
         caracter = entrada.nextLine();
-
         entrada.close();
-
-        caracter = caracter + "$";
-        do{
-            t = Scanner();
-            switch(t){
-                case 0:
-                    System.out.println("Programa finalizado");
-                    System.out.println("TABLA DE ANALISIS GENERAL:");
-                    for(String imprimir : tabla1){
-                        System.out.println(imprimir);
-                    }
-                    System.out.println("\nTABLA DE INDENTIFICADORES: ");
-                    for(String imprimir : tabla2){
-                        System.out.println(imprimir);
-                    }
-                    salir = false;
-                    break;
-                case 100:
-                    aniadir = "100 Id ";
-                    aniadir += buffer;
-                    tabla1.add(aniadir);
-                    tabla2.add(aniadir);
-                    break;
-                case 400:
-                case 401:
-                case 402:
-                case 403:
-                case 404:
-                case 405:
-                    aniadir = t + " Pal.Reserv. " + buffer;
-                    tabla1.add(aniadir);
-                    break;
-                case 2000:
-                case 2001:
-                case 2002:
-                case 2003:
-                case 2004:
-                case 2005:
-                case 2006:
-                    aniadir = t + " Operador " + buffer;
-                    tabla1.add(aniadir);
-                    break;
-                default:
-                    System.out.println("FINALIZO POR ERROR");
-                    salir = false;
-                    break;
-            }
-        }while(salir == true);
+        caracter = caracter + "$#";
+        temporal = caracter;
     }
-    
-    public int Scanner(){
-        
+
+    public String retEntrada() {
+        return temporal;
+    }
+
+    public void mover() {
+        temporal = temporal.trim();
+        String puente = "";
+        for (int i = buffer.length(); i < temporal.length(); i++) {
+            puente += temporal.charAt(i);
+        }
+        temporal = puente;
+    }
+
+    public String retBuffer() {
+        return buffer;
+    }
+
+    public int buscar(String x) {
+        for (int k = 0; k < reservadas.length; k++) {
+            if (x.equals(reservadas[k])) return 400 + k;
+        }
+        return 100;
+    }
+
+    public int scanner() {
         int i = 0, e = 0;
         char a;
         buffer = "";
@@ -86,11 +52,11 @@ public class Lexico {
         while(true){
             a = caracter.charAt(posicion);
             
-            if(a=='$' && i==0){
+            if(a=='#' && i==0){
                 return 0;
             }
             else{
-                if (a == '$') {
+                if (a == '#') {
                     switch(e){
                         case 1:  
                             return Reservada(buffer);
@@ -111,11 +77,16 @@ public class Lexico {
                                     return Operador(a);
                                 }
                                 else{
-                                    if(a != ' '){
-                                        return 1000; //bota error y acaba el programa, el posicion++ no es necesario
+                                    if(a == '$'){
+                                        return 200;
                                     }
                                     else{
-                                        e = 0; //no se para que sirve pero el profe lo tiene en su programa
+                                        if(a != ' '){
+                                            return 1000; //bota error y acaba el programa, el posicion++ no es necesario
+                                        }
+                                        else{
+                                            e = 0; //no se para que sirve pero el profe lo tiene en su programa
+                                        }
                                     }
                                 }
                             }
@@ -135,8 +106,8 @@ public class Lexico {
                     posicion++;
                 }
             }
-        }  
-    }    
+        } 
+    }
 
     public int Reservada(String buffer){     
         for(int i=0;i<reservadas.length;i++){
@@ -157,5 +128,41 @@ public class Lexico {
         }
         return 1000; 
     }
-}
 
+    public String ae(int t) {
+        switch (t) {
+            case 100:
+                return "id";
+            case 200:
+                return "$";
+            case 400:
+                return "class";
+            case 401:
+                return "integer";
+            case 402:
+                return "real";
+            case 403:
+                return "publico";
+            case 404:
+                return "privado";
+            case 405:
+                return "var";
+            case 2000:
+                return "{";
+            case 2001:
+                return "}";
+            case 2002:
+                return "(";
+            case 2003:
+                return ")";
+            case 2004:
+                return ":";
+            case 2005:
+                return ";";
+            case 2006:
+                return ",";
+            default:
+                return "";
+        }
+    }
+}
