@@ -28,7 +28,7 @@ class Parser {
         M[10][0] = "Tipo";                                                                                                                                                                                                                                                                                                                             M[10][11] = "integer"; M[10][12] = "real";                      
         M[11][0] = "Agregar2";                                                                                                                                                                                                                                                                                                        M[11][10] = "&";                                                                                                M[11][14] = "Linea ,";                        
         M[12][0] = "Var";                                          M[12][3] = "&";                                                                                                                                                                                                                                                                                                                  M[12][13] = "var";    }
-
+        M[13][0] =
     public int terminal(String car) {
         for (int i = 0; i < vt.length; i++) {
             if (car.equals(vt[i])) return 1;
